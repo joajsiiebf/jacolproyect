@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anónimos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f4f4f9;
+    }
+    input, textarea {
+      width: 80%;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>📩 Mensajes Anónimos</h1>
+
+  <!-- Pantalla 1: Crear link -->
+  <div id="crear">
+    <input type="text" id="username" placeholder="Tu usuario">
+    <button onclick="crearLink()">Crear mi link</button>
+    <p id="miLink"></p>
+    <h2>💬 Tus mensajes recibidos:</h2>
+    <ul id="mensajes"></ul>
+  </div>
+
+  <!-- Pantalla 2: Enviar mensaje -->
+  <div id="enviar" class="hidden">
+    <h2>✉️ Envía un mensaje anónimo</h2>
+    <textarea id="mensaje" placeholder="Escribe tu mensaje..."></textarea><br>
+    <button onclick="enviarMensaje()">Enviar</button>
+    <p id="estado"></p>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <script>
+    // Configuración Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7d2ESr9OWoB-gHf-Q43u5zP4_zzAqVn0",
+      authDomain: "jscol-proyect.firebaseapp.com",
+      databaseURL: "https://jscol-proyect-default-rtdb.firebaseio.com",
+      projectId: "jscol-proyect",
+      storageBucket: "jscol-proyect.firebasestorage.app",
+      messagingSenderId: "934602512424",
+      appId: "1:934602512424:web:7a57de3de37ca0db577d1d",
+      measurementId: "G-T492XSBQ9G"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Detectar si es link de envío
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get("user");
+
+    if (user) {
+      document.getElementById("crear").classList.add("hidden");
+      document.getElementById("enviar").classList.remove("hidden");
+    }
+
+    // Crear link de usuario
+    function crearLink() {
+      const username = document.getElementById("username").value.trim();
+      if (username === "") {
+        alert("Debes escribir un usuario");
+        return;
+      }
+      const link = `${window.location.origin}${window.location.pathname}?user=${username}`;
+      document.getElementById("miLink").innerHTML = 
+        `Tu link: <a href="${link}" target="_blank">${link}</a>`;
+
+      // Mostrar mensajes en vivo
+      const ref = db.ref("mensajes/" + username);
+      ref.on("value", snapshot => {
+        const lista = document.getElementById("mensajes");
+        lista.innerHTML = "";
+        snapshot.forEach(child => {
+          const li = document.createElement("li");
+          li.textContent = "🔹 " + child.val();
+          lista.appendChild(li);
+        });
+      });
+    }
+
+    // Enviar mensaje anónimo
+    function enviarMensaje() {
+      const txt = document.getElementById("mensaje").value.trim();
+      if (txt === "") {
+        alert("Escribe algo antes de enviar");
+        return;
+      }
+      db.ref("mensajes/" + user).push(txt);
+      document.getElementById("mensaje").value = "";
+      document.getElementById("estado").textContent = "✅ Mensaje enviado";
+      setTimeout(() => {
+        document.getElementById("estado").textContent = "";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
