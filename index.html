@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Makabe IA 🖤</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Makabe IA 🖤</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Makabe IA 🖤</h1>
+<div class="container">
+  <h1>Makabe IA 🖤</h1>
 
-    <div id="chat"></div>
+  <div id="chat"></div>
 
-    <div class="input-area">
-      <input id="message" type="text" placeholder="Escribe algo a Makabe IA...">
-      <button onclick="sendMessage()">Enviar</button>
-    </div>
+  <div class="input-area">
+    <input id="message" type="text" placeholder="Escribe algo a Makabe IA...">
+    <button onclick="sendMessage()">Enviar</button>
   </div>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="script.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- OpenAI directamente en frontend -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="script.js"></script>
 </body>
 </html>
